@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-import { List } from "@raycast/api";
+import { Action, ActionPanel, List, getPreferenceValues } from "@raycast/api";
+
+interface Preferences {
+  rootFontSize: string;
+}
 
 export default function CommandWithCustomEmptyView() {
   const [state, setState] = useState({ searchText: "", items: [] });
   const [pixelValue, setPixelValue] = useState("");
   const [remValue, setRemValue] = useState("");
   const [unitGiven, setUnitGiven] = useState("");
+
+  const preferences = getPreferenceValues<Preferences>();
+  const { rootFontSize } = preferences;
 
   const PX_REGEX = /px$/;
   const REM_REGEX = /rem$/;
@@ -21,8 +28,8 @@ export default function CommandWithCustomEmptyView() {
     }
     const numbersOnly = state.searchText.replace(/[^.^0-9]/g, "");
     if (numbersOnly) {
-      setPixelValue(`${parseFloat(numbersOnly) * 16}px`);
-      setRemValue(`${parseFloat(numbersOnly) / 16}rem`);
+      setPixelValue(`${parseFloat(numbersOnly) * parseInt(rootFontSize)}px`);
+      setRemValue(`${parseFloat(numbersOnly) / parseInt(rootFontSize)}rem`);
     }
   }, [state.searchText]);
 
@@ -35,9 +42,27 @@ export default function CommandWithCustomEmptyView() {
         <List.EmptyView title="Type something to get started" />
       ) : (
         <>
-          {unitGiven !== "rem" && <List.Item title="To rem" detail={<List.Item.Detail markdown={`# ${remValue}`} />} />}
+          {unitGiven !== "rem" && (
+            <List.Item
+              title="To rem"
+              actions={
+                <ActionPanel title="Copy to clipboard">
+                  <Action.CopyToClipboard title="Copy to clipboard" content={remValue} />
+                </ActionPanel>
+              }
+              detail={<List.Item.Detail markdown={`# ${remValue}`} />}
+            />
+          )}
           {unitGiven !== "px" && (
-            <List.Item title="To pixels" detail={<List.Item.Detail markdown={`# ${pixelValue}`} />} />
+            <List.Item
+              title="To pixels"
+              actions={
+                <ActionPanel title="Copy to clipboard">
+                  <Action.CopyToClipboard title="Copy to clipboard" content={pixelValue} />
+                </ActionPanel>
+              }
+              detail={<List.Item.Detail markdown={`# ${pixelValue}`} />}
+            />
           )}
         </>
       )}

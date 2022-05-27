@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "pixels-to-rems",
-  "title": "Pixels to REMs",
-  "description": "Converts pixels to REMs and vice versa.",
+  "title": "Pixels to rems",
+  "description": "Converts pixels to rems and vice versa.",
   "icon": "command-icon.png",
   "author": "joecooper",
   "categories": [
@@ -14,9 +14,18 @@
   "commands": [
     {
       "name": "index",
-      "title": "Pixels to REMs",
-      "description": "Converts pixels to REMs and vice versa.",
-      "mode": "view"
+      "title": "Pixels to rems",
+      "description": "Converts pixels to rems and vice versa.",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "rootFontSize",
+          "title": "Root font size",
+          "description": "Font size of the root element in pixels.",
+          "type": "textfield",
+          "default": "16"
+        }
+      ]
     }
   ],
   "dependencies": {
